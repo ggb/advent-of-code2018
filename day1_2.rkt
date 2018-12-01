@@ -7,7 +7,7 @@
       (reduce-and-find* input-list-copy input-list-copy last-val seen?)
       (let ([current-number (+ last-val (first input-list))])
         (begin
-          (printf "- Current frequency ~a, change of ~a; resulting frequency  ~a.\n" last-val (first input-list) current-number)
+          ;(printf "- Current frequency ~a, change of ~a; resulting frequency  ~a.\n" last-val (first input-list) current-number)
           (if (set-member? seen? current-number)
               current-number
               (reduce-and-find* (rest input-list) input-list-copy current-number (set-add seen? current-number)))))))
@@ -21,4 +21,4 @@
 (=  5 (reduce-and-find '(-6 3 8 5 -6)))
 (= 14 (reduce-and-find '(7 7 -2 -7 -4)))
 
-;(reduce-and-find (map string->number (file->lines "tag1_1-input.txt")))
+(reduce-and-find (map string->number (file->lines "day1_1-input.txt")))
