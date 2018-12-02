@@ -27,3 +27,5 @@
   (list "abcdef" "bababc" "abbcde" "abcccd" "aabcdd" "abcdee" "ababab"))
 
 (= 12 (solve-puzzle test-inputs))
+
+;(solve-puzzle (file->lines "day2_1-input.txt"))
