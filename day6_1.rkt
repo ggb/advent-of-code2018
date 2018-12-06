@@ -2,7 +2,7 @@
 
 (require threading)
 
-(provide distance points parse-input test-input)
+(provide distance points parse-input test-input extreme-coords)
 
 (define (distance p q)
   (cons (+ (abs (- (car p) (car q)))
@@ -22,8 +22,15 @@
         (cons 0 '())
         min)))
 
+(define (extreme-coords input)
+  (list (car (argmin car input))
+        (cdr (argmin cdr input))
+        (car (argmax car input))
+        (cdr (argmax cdr input))))
+
 (define (solve-puzzle input)
-  (~>> (points 40 54 330 348) ; oh yes, it's hard coded
+  (~>> (extreme-coords input)
+       (apply points)
        (map (lambda (p)
               (~>> (map (curry distance p) input)
                    (same-min?)
