@@ -2,7 +2,7 @@
 
 (require threading)
 
-(provide distance points)
+(provide distance points parse-input test-input)
 
 (define (distance p q)
   (cons (+ (abs (- (car p) (car q)))
