@@ -1,6 +1,7 @@
 #lang racket
 
 (require threading)
+(provide find-start find-next not-available? parse-input test-input)
 
 (define (not-available? pairs target)
   (~>> pairs
