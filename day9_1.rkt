@@ -1,18 +1,27 @@
 #lang racket
 
+(provide solve-puzzle)
 
 (define (update-list current new-n l)
   (let* ([index (index-of l current)]
          [new-index (modulo (+ index 2) (length l))])
     (let-values ([(front tail) (split-at l new-index)])
-      (append front (list new-n) tail))))
+      (append front (cons new-n tail)))))
+
+(define (deleteNth n l)
+  (cond
+    [(= n 0) (rest l)]
+    [(< n (length l)) (append (take l n) (rest (drop l n)))]
+    [else l]))
 
 (define (calc-score n l)
   (let* ([index (index-of l n)]
-         [nine-left (list-ref l (modulo (- index 9) (length l)))]
-         [new-current (list-ref l(modulo (- index 8) (length l)))]
-         [score (+ (list-ref l index) nine-left)]
-         [updated-list (remove nine-left (remove n l))])
+         [nine-left (modulo (- index 9) (length l))]
+         [new-current (list-ref l (modulo (- index 8) (length l)))]
+         [score (+ (list-ref l index) (list-ref l nine-left))]
+         [updated-list (if (= index (max index nine-left))
+                           (deleteNth nine-left (deleteNth index l))
+                           (deleteNth index (deleteNth nine-left l)))])
     (values new-current score updated-list)))
 
 (define (update-player player-n current)
@@ -39,3 +48,5 @@
 (=   32 (cdr (solve-puzzle 9 25)))
 (= 8317 (cdr (solve-puzzle 10 1618)))
 (= 2764 (cdr (solve-puzzle 17 1104)))
+
+;(time (solve-puzzle 459 71320))
