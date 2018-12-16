@@ -2,6 +2,8 @@
 
 (require threading)
 
+(provide list->hash parse-input run-instruction)
+
 (define (run-instruction inp-a inp-b inp-c regs opc)
   (cond
     [(=  0 opc) (hash-set regs inp-c (+ (hash-ref regs inp-a) (hash-ref regs inp-b)))]           ; addr
@@ -54,3 +56,5 @@
                      (behave-like-three (second s) (third s) (fourth s) (first m) (third m)))))
        (filter (curry <= 3))
        (length)))
+
+; (solve-puzzle (parse-input "day16_input1.txt"))
