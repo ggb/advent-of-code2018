@@ -25,15 +25,20 @@
                   (cons i (current-position state i)))
                 (range min max))))
 
+(define (print-state state)
+  (println (string-join (map (lambda (x) (if (hash-has-key? state x) "#" ".")) (range -2 36)) "")))
+
 (define (solve-puzzle n inp)
   (let-values ([(state mapping) (parse-input inp)])
     (apply + (hash-keys
               (third
                (foldr (lambda (ele acc)
+                        (begin
+                          (print-state (third acc))
                         (list
                          (- (first acc) 2)
                          (+ (second acc) 2)
-                         (get-updates (third acc) mapping (first acc) (second acc))))
+                         (get-updates (third acc) mapping (first acc) (second acc)))))
                       (list 0 (hash-count state) state)
                       (range n)))))))
 
