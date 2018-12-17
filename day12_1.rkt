@@ -2,6 +2,8 @@
 
 (require threading)
 
+(provide solve-puzzle)
+
 (define (current-position state pos)
   (string-join (map (lambda (x) (hash-ref state x ".")) (range (- pos 2) (+ pos 3))) ""))
 
@@ -26,21 +28,25 @@
                 (range min max))))
 
 (define (print-state state)
-  (println (string-join (map (lambda (x) (if (hash-has-key? state x) "#" ".")) (range -2 36)) "")))
+  (println (string-join (map (lambda (x) (if (hash-has-key? state x) (hash-ref state x) ".")) (range -5 120)) "")))
 
-(define (solve-puzzle n inp)
+(define (solve-puzzle n viz? inp)
   (let-values ([(state mapping) (parse-input inp)])
-    (apply + (hash-keys
-              (third
-               (foldr (lambda (ele acc)
-                        (begin
-                          (print-state (third acc))
-                        (list
-                         (- (first acc) 2)
-                         (+ (second acc) 2)
-                         (get-updates (third acc) mapping (first acc) (second acc)))))
-                      (list 0 (hash-count state) state)
-                      (range n)))))))
+    (~>> (range n)
+         (foldr (lambda (ele acc)
+                  (begin
+                    (and viz? (print-state (third acc)))
+                    (list
+                     (- (first acc) 2)
+                     (+ (second acc) 2)
+                     (get-updates (third acc) mapping (first acc) (second acc)))))
+                (list -2 (+ 2 (hash-count state)) state))
+         (third)
+         (hash->list)
+         (filter (lambda (e) (equal? "#" (cdr e))))
+         (map car)
+         (apply +))))
+                
 
 (define test-input
   (list "initial state: #..#.#..##......###...###"
@@ -60,4 +66,6 @@
         "###.# => #"
         "####. => #"))
 
-(= 325 (solve-puzzle 20 test-input))
+(= 325 (solve-puzzle 20 #t test-input))
+
+; (solve-puzzle 20 #t (file->lines "day12_input.txt"))
