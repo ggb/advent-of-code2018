@@ -37,10 +37,10 @@
                   (begin
                     (and viz? (print-state (third acc)))
                     (list
-                     (- (first acc) 2)
+                     (first acc)
                      (+ (second acc) 2)
                      (get-updates (third acc) mapping (first acc) (second acc)))))
-                (list -2 (+ 2 (hash-count state)) state))
+                (list -20 (+ 2 (hash-count state)) state))
          (third)
          (hash->list)
          (filter (lambda (e) (equal? "#" (cdr e))))
