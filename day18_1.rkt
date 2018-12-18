@@ -96,7 +96,7 @@
 (define (solve-puzzle init-state)
   (big-bang
       init-state
-    (on-tick update-forest 0.5)
+    (on-tick update-forest 2 10)
     (to-draw draw-forest)))
 
 (define test-input
