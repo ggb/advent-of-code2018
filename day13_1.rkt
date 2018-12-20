@@ -51,7 +51,13 @@
     [(and (equal? turn 'right) (equal? direction 'right)) (cart (move-up position) 'down 'left)]))
 
 (define (crash? ct carts)
-  '())
+  (foldl (lambda (ele acc)
+           (cond
+             [(equal? ct ele) acc]
+             [(equal? (cart-pos ct) (cart-pos ele)) (cons (cart-pos ct) acc)]
+             [else acc]))
+         '()
+         carts))
 
 (define (solve-puzzle* carts track crashs)
   (if (not (empty? crashs))
