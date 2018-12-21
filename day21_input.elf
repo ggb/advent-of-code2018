@@ -1,0 +1,32 @@
+#ip 2
+00 seti 123 0 1 // reg[1] = 123
+01 bani 1 456 1 // reg[1] = 72 
+02 eqri 1 72 1 // reg[1] = 0
+03 addr 1 2 2
+04 seti 0 0 2
+05 seti 0 4 1
+06 bori 1 65536 3
+07 seti 10905776 4 1
+08 bani 3 255 4
+09 addr 1 4 1
+10 bani 1 16777215 1
+11 muli 1 65899 1
+12 bani 1 16777215 1
+13 gtir 256 3 4
+14 addr 4 2 2
+15 addi 2 1 2
+16 seti 27 1 2
+17 seti 0 6 4
+18 addi 4 1 5
+19 muli 5 256 5
+20 gtrr 5 3 5
+21 addr 5 2 2
+22 addi 2 1 2
+23 seti 25 1 2
+24 addi 4 1 4
+25 seti 17 9 2
+26 setr 4 7 3
+27 seti 7 4 2
+28 eqrr 1 0 4
+29 addr 4 2 2
+30 seti 5 1 2
