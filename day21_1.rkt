@@ -1,6 +1,7 @@
 #lang racket
 
 (require threading)
+(provide elf-loop)
 
 ; reg-a: Register 1
 ; reg-b: Register 3
