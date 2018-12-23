@@ -15,25 +15,26 @@
   (cons (add1 (car p)) (cdr p)))
 
 (define (move-cart track ct)
-  (define position (hash-ref track (cart-pos ct)))
+  (define position (cart-pos ct))
+  (define content (hash-ref track (cart-pos ct)))
   (define direction (cart-direction ct))
   (define turn (cart-turn ct))
   (cond
     ;
-    [(and (equal? position "|") (equal? direction 'up)) (struct-copy cart ct [pos (move-up position)])]
-    [(and (equal? position "|") (equal? direction 'down)) (struct-copy cart ct [pos (move-down position)])]
-    [(and (equal? position "-") (equal? direction 'left)) (struct-copy cart ct [pos (move-left position)])]
-    [(and (equal? position "-") (equal? direction 'right)) (struct-copy cart ct [pos (move-right position)])]
+    [(and (equal? content "|") (equal? direction 'up)) (struct-copy cart ct [pos (move-up position)])]
+    [(and (equal? content "|") (equal? direction 'down)) (struct-copy cart ct [pos (move-down position)])]
+    [(and (equal? content "-") (equal? direction 'left)) (struct-copy cart ct [pos (move-left position)])]
+    [(and (equal? content "-") (equal? direction 'right)) (struct-copy cart ct [pos (move-right position)])]
     ;
-    [(and (equal? position "/") (equal? direction 'up)) (cart (move-right position) 'right turn)]
-    [(and (equal? position "/") (equal? direction 'down)) (cart (move-left position) 'left turn)]
-    [(and (equal? position "/") (equal? direction 'left)) (cart (move-down position) 'down turn)]
-    [(and (equal? position "/") (equal? direction 'right)) (cart (move-up position) 'up turn)]
+    [(and (equal? content "/") (equal? direction 'up)) (cart (move-right position) 'right turn)]
+    [(and (equal? content "/") (equal? direction 'down)) (cart (move-left position) 'left turn)]
+    [(and (equal? content "/") (equal? direction 'left)) (cart (move-down position) 'down turn)]
+    [(and (equal? content "/") (equal? direction 'right)) (cart (move-up position) 'up turn)]
     ;
-    [(and (equal? position "\\") (equal? direction 'up)) (cart (move-left position) 'left turn)]
-    [(and (equal? position "\\") (equal? direction 'down)) (cart (move-right position) 'right turn)]
-    [(and (equal? position "\\") (equal? direction 'left)) (cart (move-up position) 'up turn)]
-    [(and (equal? position "\\") (equal? direction 'right)) (cart (move-down position) 'down turn)]
+    [(and (equal? content "\\") (equal? direction 'up)) (cart (move-left position) 'left turn)]
+    [(and (equal? content "\\") (equal? direction 'down)) (cart (move-right position) 'right turn)]
+    [(and (equal? content "\\") (equal? direction 'left)) (cart (move-up position) 'up turn)]
+    [(and (equal? content "\\") (equal? direction 'right)) (cart (move-down position) 'down turn)]
     ;
     [(and (equal? turn 'left) (equal? direction 'up)) (cart (move-left position) 'left 'straight)]
     [(and (equal? turn 'left) (equal? direction 'down)) (cart (move-right position) 'right 'straight)]
@@ -45,12 +46,12 @@
     [(and (equal? turn 'straight) (equal? direction 'left)) (cart (move-left position) 'left 'right)]
     [(and (equal? turn 'straight) (equal? direction 'right)) (cart (move-right position) 'right 'right)]
     ;
-    [(and (equal? turn 'right) (equal? direction 'up)) (cart (move-left position) 'right 'left)]
-    [(and (equal? turn 'right) (equal? direction 'down)) (cart (move-right position) 'left 'left)]
-    [(and (equal? turn 'right) (equal? direction 'left)) (cart (move-down position) 'up 'left)]
-    [(and (equal? turn 'right) (equal? direction 'right)) (cart (move-up position) 'down 'left)]))
+    [(and (equal? turn 'right) (equal? direction 'up)) (cart (move-right position) 'right 'left)]
+    [(and (equal? turn 'right) (equal? direction 'down)) (cart (move-left position) 'left 'left)]
+    [(and (equal? turn 'right) (equal? direction 'left)) (cart (move-up position) 'up 'left)]
+    [(and (equal? turn 'right) (equal? direction 'right)) (cart (move-down position) 'down 'left)]))
 
-(define (crash? ct carts)
+(define (crash? carts ct)
   (foldl (lambda (ele acc)
            (cond
              [(equal? ct ele) acc]
@@ -59,13 +60,21 @@
          '()
          carts))
 
-(define (solve-puzzle* carts track crashs)
-  (if (not (empty? crashs))
-      crashs
-      (solve-puzzle* (map (curry move-cart track) carts) track crashs)))
+(define (check-crashs? carts)
+  (filter (negate empty?) (map (curry crash? carts) carts)))
+
+(define (solve-puzzle* iterations carts track crashs)
+  (if (or false ;(> iterations 20)
+          (not (empty? crashs)))
+      (begin
+        (println iterations)
+      crashs)
+      (let* ([updated-carts (map (curry move-cart track) carts)]
+             [updated-crashs (check-crashs? updated-carts)])
+        (solve-puzzle* (add1 iterations) updated-carts track updated-crashs))))
 
 (define (solve-puzzle carts track)
-  (solve-puzzle* carts track '()))
+  (solve-puzzle* 0 carts track '()))
 
 (define (split-line carts track line ln)
   (define splitted (drop (drop-right (string-split line "") 1) 1))
@@ -99,3 +108,6 @@
         "| | |  | v  |"
         "\\-+-/  \\-+--/"
         "  \\------/   "))
+
+; (define t (parse-input (file->lines "day13_input.txt")))
+; (solve-puzzle (car t) (cdr t))
