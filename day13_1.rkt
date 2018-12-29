@@ -1,5 +1,7 @@
 #lang racket
 
+(provide (struct-out cart) parse-input move-cart)
+
 (struct cart (pos direction turn))
 
 (define (move-up p)
